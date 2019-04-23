@@ -14,12 +14,13 @@
 ;;; Code:
 
 (require 'cl)
+(require 'button)
 
 (defvar powerline-color1)
 (defvar powerline-color2)
 
-(setq powerline-color1 "grey22")
-(setq powerline-color2 "grey40")
+(setq powerline-color1 "grey35")
+(setq powerline-color2 "grey45")
 
 (set-face-attribute 'mode-line nil
                     :background "OliveDrab3"
@@ -437,15 +438,19 @@ install the memoized function over the original function."
                                                    (redraw-modeline)))))
 (defpowerline lcl         current-input-method-title)
 (defpowerline rmw         "%*")
-(defpowerline major-mode  (propertize (format-mode-line mode-name)
-                                      'help-echo "Major mode\n\ mouse-1: Display major mode menu\n\ mouse-2: Show help for major mode\n\ mouse-3: Toggle minor modes"
-                                      'local-map (let ((map (make-sparse-keymap)))
-                                                   (define-key map [mode-line down-mouse-1]
-                                                     `(menu-item ,(purecopy "Menu Bar") ignore
-                                                                 :filter (lambda (_) (mouse-menu-major-mode-map))))
-                                                   (define-key map [mode-line mouse-2] 'describe-mode)
-                                                   (define-key map [mode-line down-mouse-3] mode-line-mode-menu)
-                                                   map)))
+
+(defpowerline major-mode  (concat (propertize (format-mode-line mode-name)
+                                              'help-echo "Major mode\n\ mouse-1: Display major mode menu\n\ mouse-2: Show help for major mode\n\ mouse-3: Toggle minor modes"
+                                              'local-map (let ((map (make-sparse-keymap)))
+                                                           (define-key map [mode-line down-mouse-1]
+                                                             `(menu-item ,(purecopy "Menu Bar") ignore
+                                                                         :filter (lambda (_) (mouse-menu-major-mode-map))))
+                                                           (define-key map [mode-line mouse-2] 'describe-mode)
+                                                           (define-key map [mode-line down-mouse-3] mode-line-mode-menu)
+                                                           map)
+                                              'mouse-face 'mode-line-highlight)
+                                  (format-mode-line mode-line-process)))
+
 (defpowerline minor-modes (let ((mms (split-string (format-mode-line minor-mode-alist))))
                             (apply 'concat
                                    (mapcar #'(lambda (mm)
